@@ -1,15 +1,20 @@
-string = input()
+def isGroup(string):
+    arr = [-1 for j in range(26)]
+    for i in range(len(string)):
+        index = ord(string[i]) - ord('a')
+        if arr[index] == -1 or arr[index] == i-1:
+            arr[index] = i
+            continue
+        else:
+            return False
+    return True 
 
-string = string.upper()
-arr = [0 for i in range(26)]
-for i in range(len(string)):
-    arr[ord(string[i]) - ord('A')] += 1
+N = int(input())
 
-maxNumber = max(arr)
-maxIndex = arr.index(maxNumber)
-arr.pop(maxIndex)
-try:
-    arr.index(maxNumber)
-    print('?')
-except:
-    print(chr(maxIndex + ord('A')))    
+count = 0
+for i in range(N):
+    string = input()
+    if isGroup(string):
+        count += 1
+
+print(count)
