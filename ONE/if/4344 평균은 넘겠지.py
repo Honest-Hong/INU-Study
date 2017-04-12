@@ -9,5 +9,5 @@ for i in range(N):
     result.append(round((cnt/score[0])*100,3))
     cnt = 0
 
-for i in range(len(result)):
-    print("%.3f%%" % result[i])
+for i in rnage(len(result)):
+    print("%.3f%%" % result[i]i)
