@@ -1,5 +1,4 @@
 cnt=0
-
 case=int(input())
 for i in range (case) :
     sco=[int(x) for x in input().split()]
@@ -8,8 +7,8 @@ for i in range (case) :
         if(j>avg) :
             cnt+=1
     rate=cnt/sco[0]*100
-    #res= round(rate,4)
-    print("%0.4f" %rate +"%")
+    print("%0.3f" %rate +"%")
+    cnt=0
     
 
             
