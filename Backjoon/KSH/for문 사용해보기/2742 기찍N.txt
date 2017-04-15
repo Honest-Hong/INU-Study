@@ -1,0 +1,5 @@
+N=int(input())
+M=N
+N=range(0,N)
+for i in N :
+    print(M-i)

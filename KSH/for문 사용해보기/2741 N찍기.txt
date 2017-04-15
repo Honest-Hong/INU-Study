@@ -1,4 +1,0 @@
-N=int(input())
-N=range(1,N+1)
-for i in N:
-    print(i)

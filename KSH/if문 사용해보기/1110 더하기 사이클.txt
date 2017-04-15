@@ -1,9 +1,0 @@
-N=int(input())
-a=N
-cnt=0
-while (N!=a or cnt == 0):
-    k=a%10
-    a=(a//10)+k
-    a=(10*k)+(a%10)
-    cnt+=1
-print(cnt)

@@ -1,0 +1,6 @@
+N=int(input())
+M=input()
+a=0
+for i in range(N):
+    a+=int(M[i])
+print(a)
