@@ -2,50 +2,46 @@ from tkinter import *
 from random import shuffle
 import requests
 import bs4
-import webbrowser
 import threading
+import webbrowser
 from collections import Counter
 from konlpy.tag import Twitter
 
 class Article:
-    def __init__(self, title, content, url):
-        self.title = title #기사 제목
-        self.content = content #기사 내용
-        self.url = url #기사 링크
+    def __init__(self, title, link):
+        self.title = title
+        self.link = link
 
-    def __repr__(self):
-        return self.title + ',' + ',' + self.url + '\n'
+    def open(self):
+        webbrowser.open(self.link)
 
 class Finder(threading.Thread):
     def __init__(self, keyword):
-        super(Finder, self).__init__()
+        super(self.__class__, self).__init__()
         self.keyword = keyword
+
     def run(self):
+        keyword = self.keyword
         allText = ""
+        articles = []
         for page in range(1,6):
-            url = 'http://www.koreaherald.com/search/?q=' + self.keyword + '&dt=2&nt=1&np=' + str(page) + '&hq='
+            url = 'http://www.koreaherald.com/search/?q=' + keyword + '&dt=2&nt=1&np=' + str(page) + '&hq='
             soup = bs4.BeautifulSoup(requests.get(url).text, 'html.parser', from_encoding='utf-8')
             container = soup.body.find(id='container')
             dd = container.div.findAll('dd')
 
-
             for i in range(10):
                 try:
                     aList = dd[i].findAll('a')
-                    if len(aList) >= 2:
-                        print('제목: ', aList[1].text)
-                    else:
-                        print('제목: ', aList[0].text)
-                    print(aList[0]['href'])
                     soup2 = bs4.BeautifulSoup(requests.get(aList[0]['href']).text, 'html.parser', from_encoding='utf-8')
                     article = soup2.body.find(id='articleText')
                     try:
                         allText += article.text
                         if len(articles) < 10:
                             if len(aList) >= 2:
-                                articles.append(Article(aList[1].text, article.text,aList[0]['href']))
+                                articles.append(Article(aList[1].text, aList[0]['href']))
                             else:
-                                articles.append(Article(aList[0].text, article.text,aList[0]['href']))
+                                articles.append(Article(aList[0].text, aList[0]['href']))
                     except:
                         print('사이트가 다름')
                         continue
@@ -64,22 +60,25 @@ class Finder(threading.Thread):
 
         wResult = Tk()
         wResult.title('결과 화면')
-        wResult.geometry('500x800')
-        # 기사 10개 버튼들
+        wResult.geometry('500x700')
         for art in articles:
-            button = Button(wResult, text=art.title, command = lambda url=art.url : OpenSite(url))
-            button.pack()
+            btn = Button(wResult, text=art.title, command = lambda a = art : a.open())
+            btn.pack()
         frame = Frame(wResult)
         frame.pack()
         maxCount = result[0][1]
         minCount = result[-1][1]
         shuffle(result)
         for i in range(len(result)):
+            if keyword == result[i][0]:
+                result.pop(i)
+                break
+        for i in range(len(result)):
             diff = result[i][1] - minCount
             ratio = diff / (maxCount - minCount)
             fontSize = 50 * ratio
-            if fontSize < minSize:
-                fontSize = minSize
+            if fontSize < 3:
+                fontSize = 3
                 
             lbl = Label(frame, text=result[i][0], font=('굴림', int(fontSize)))
             lbl.pack(side=LEFT)
@@ -87,12 +86,6 @@ class Finder(threading.Thread):
                 frame = Frame(wResult)
                 frame.pack()
         wResult.mainloop()
-
-minSize = 5
-articles = []
-
-def OpenSite(url):
-    webbrowser.open_new(url)
 
 def Search(keyword):
     finder = Finder(keyword)

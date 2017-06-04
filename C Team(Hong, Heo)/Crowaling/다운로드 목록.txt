@@ -1,0 +1,7 @@
+Python 3.x
+
+pip install reqeusts
+pip install bs4
+(일부)pip install numpy
+pip install konlpy
+ * Jpype 다운로드 필요
